@@ -6,7 +6,7 @@ import ru.t1.demo.model.dto.AccountResponseDTO;
 
 @Component
 public class AccountResponseMapper {
-    //    public Account toEntity(AccountResponseDTO accountResponseDTO) {
+//        public Account toEntity(AccountResponseDTO accountResponseDTO) {
 //        return Account.builder()
 //                .type(accountResponseDTO.getType())
 //                .balance(accountResponseDTO.getBalance())
