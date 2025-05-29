@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.t1.demo.aop.annotation.Metric;
 import ru.t1.demo.exception.NoEntityException;
 import ru.t1.demo.util.AccountRequestMapper;
 import ru.t1.demo.util.AccountResponseMapper;
@@ -33,6 +34,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRequestMapper accountRequestMapper;
 
     @Override
+    @Metric
     public List<AccountResponseDTO> getAccounts() {
         log.info("Getting accounts");
         return accountRepository.findAll().stream()
@@ -41,6 +43,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Metric
     public AccountResponseDTO getAccountById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new NoEntityException("Счета с id " + id + "  не существует."));
         return AccountResponseDTO.builder()
@@ -53,6 +56,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Metric
     public AccountResponseDTO getAccountByClientId(UUID clientId) {
         Account account = accountRepository.findByClientId(clientId).orElseThrow(() -> new NoEntityException("Счета с client_id " + clientId + " не существует."));
         return AccountResponseDTO.builder()
@@ -65,6 +69,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Metric
     public void createAccount(AccountRequestDTO accountRequestDTO) {
         Account account = accountRequestMapper.toEntity(accountRequestDTO);
         accountRepository.save(account);
@@ -72,6 +77,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    @Metric
     public void deleteAccountById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new NoEntityException("Счета с id " + id + "  не существует."));
 
@@ -81,6 +87,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Metric
     public void updateAccount(Long id, AccountRequestDTO accountRequestDTO) {
         accountRepository.findById(id).orElseThrow(() -> new NoEntityException("Счета с id " + id + "  не существует."));
         Account account = accountRequestMapper.toEntity(accountRequestDTO);

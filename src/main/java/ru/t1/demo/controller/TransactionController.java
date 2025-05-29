@@ -23,35 +23,35 @@ public class TransactionController {
     @LogDataSourceError
     public ResponseEntity<List<TransactionDTO>> getTransactions() {
         log.info("Getting transactions");
-        throw new NoEntityException("Ошибка получения транзакций");
-//        List<TransactionDTO> transactions = transactionService.getTransactions();
-//        log.info("Получено {} транзакция.", transactions.size());
-//        return ResponseEntity.ok(transactions);
+//        throw new NoEntityException("Ошибка получения транзакций");
+        List<TransactionDTO> transactions = transactionService.getTransactions();
+        log.info("Получено {} транзакция.", transactions.size());
+        return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/by_account/{account_id}")
     @LogDataSourceError
     public ResponseEntity<TransactionDTO> getByAccountId(@PathVariable Long account_id) {
         log.info("Find transaction by account id {}", account_id);
-        throw new RuntimeException("Проверка ошибки в TransactionController.getByAccountId(..)");
-//        return ResponseEntity.ok(transactionService.getTransactionByAccountId(account_id));
+//        throw new RuntimeException("Проверка ошибки в TransactionController.getByAccountId(..)");
+        return ResponseEntity.ok(transactionService.getTransactionByAccountId(account_id));
     }
 
     @GetMapping("/{id}")
     @LogDataSourceError
     public ResponseEntity<TransactionDTO> getById(@PathVariable Long id) {
         log.info("Find transaction by id {}", id);
-        throw new IllegalArgumentException("Проверка ошибки в TransactionController.getById(..)");
-        //return ResponseEntity.ok(transactionService.getTransactionById(id));
+//        throw new IllegalArgumentException("Проверка ошибки в TransactionController.getById(..)");
+        return ResponseEntity.ok(transactionService.getTransactionById(id));
     }
 
     @PostMapping("save")
     @LogDataSourceError
     public ResponseEntity<String> createTransaction(@RequestBody TransactionDTO transactionDTO) {
         log.info("Create transaction");
-        throw new RuntimeException("Проверка ошибки в TransactionController.createTransaction(..)");
-//        transactionService.createTransaction(transactionDTO);
-//        return ResponseEntity.ok("Транзация добавлена.");
+//        throw new RuntimeException("Проверка ошибки в TransactionController.createTransaction(..)");
+        transactionService.createTransaction(transactionDTO);
+        return ResponseEntity.ok("Транзация добавлена.");
     }
 
     @PutMapping("update/{id}")
@@ -67,8 +67,8 @@ public class TransactionController {
     @LogDataSourceError
     public ResponseEntity<String> deleteTransaction(@PathVariable Long id) {
         log.info("Delete transaction");
-        throw new RuntimeException("Проверка ошибки в TransactionController.deleteTransaction(..)");
-//        transactionService.deleteTransactionById(id);
-//        return ResponseEntity.ok("Транзакция удалена.");
+//        throw new RuntimeException("Проверка ошибки в TransactionController.deleteTransaction(..)");
+        transactionService.deleteTransactionById(id);
+        return ResponseEntity.ok("Транзакция удалена.");
     }
 }

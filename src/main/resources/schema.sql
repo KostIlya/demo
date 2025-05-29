@@ -30,10 +30,10 @@ create table data_source_error_log (
 	method_signature VARCHAR(255) NOT NULL
 );
 
---create table time_limit_exceed_log (
---    id INT PRIMARY KEY AUTO_INCREMENT,
---    method_signature VARCHAR(255) NOT NULL,
---    time_execute BIGINT NOT NULL,
---    date_time TIMESTAMP NOT NULL,
---    limit BIGINT NOT NULL
---);
+create table time_limit_exceed_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    method_signature VARCHAR(255) NOT NULL,
+    execution_time BIGINT NOT NULL,
+    date_time TIMESTAMP NOT NULL,
+    limit_time BIGINT NOT NULL
+);

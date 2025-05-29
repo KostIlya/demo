@@ -21,3 +21,6 @@ spring:
     init:
       mode: always
       continue-on-error: true
+
+metric:
+  time_limit: 500
