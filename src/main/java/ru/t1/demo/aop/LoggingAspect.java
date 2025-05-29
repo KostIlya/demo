@@ -1,5 +1,6 @@
 package ru.t1.demo.aop;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -12,9 +13,10 @@ import ru.t1.demo.repository.DataSourceErrorLogRepository;
 @Slf4j
 @Component
 @Aspect
+@RequiredArgsConstructor
 public class LoggingAspect {
     @Autowired
-    DataSourceErrorLogRepository dataSourceErrorLogRepository;
+    private final DataSourceErrorLogRepository dataSourceErrorLogRepository;
 
     @AfterThrowing(pointcut = "@annotation(ru.t1.demo.aop.annotation.LogDataSourceError)", throwing = "e")
     public void handleException(JoinPoint joinPoint, Exception e) {

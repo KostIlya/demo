@@ -22,5 +22,8 @@ spring:
       mode: always
       continue-on-error: true
 
-metric:
-  time_limit: 500
+custom:
+  metric:
+    time_limit: 500
+  cached:
+    storage_time: 15000

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "custom.metric")
-public class MetricConfig {
-    private Long timeLimit;
+@ConfigurationProperties(prefix = "custom.cached")
+public class CachedConfig {
+    private Long storageTime;
 }

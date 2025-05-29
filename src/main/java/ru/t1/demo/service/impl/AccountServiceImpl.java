@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.t1.demo.aop.annotation.Cached;
 import ru.t1.demo.aop.annotation.Metric;
 import ru.t1.demo.exception.NoEntityException;
 import ru.t1.demo.util.AccountRequestMapper;
@@ -35,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Metric
+    @Cached
     public List<AccountResponseDTO> getAccounts() {
         log.info("Getting accounts");
         return accountRepository.findAll().stream()
@@ -44,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Metric
+    @Cached(value = "getAccountById", key = "id")
     public AccountResponseDTO getAccountById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new NoEntityException("Счета с id " + id + "  не существует."));
         return AccountResponseDTO.builder()
@@ -57,6 +60,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Metric
+    @Cached(key = "clientId")
     public AccountResponseDTO getAccountByClientId(UUID clientId) {
         Account account = accountRepository.findByClientId(clientId).orElseThrow(() -> new NoEntityException("Счета с client_id " + clientId + " не существует."));
         return AccountResponseDTO.builder()

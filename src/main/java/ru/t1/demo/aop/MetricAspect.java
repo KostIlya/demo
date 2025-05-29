@@ -1,7 +1,7 @@
 package ru.t1.demo.aop;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,14 +16,15 @@ import java.time.LocalDateTime;
 @Slf4j
 @Component
 @Aspect
+@RequiredArgsConstructor
 public class MetricAspect {
     @Autowired
-    private TimeLimitExceedLogRepository timeLimitExceedLogRepository;
+    private final TimeLimitExceedLogRepository timeLimitExceedLogRepository;
     @Autowired
-    private MetricConfig metricConfig;
+    private final MetricConfig metricConfig;
     @Around("@annotation(ru.t1.demo.aop.annotation.Metric)")
     public Object timeRunningMethod(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        log.info("MetricAspect.timeRunningMethod: запущен");
+        log.info("timeRunningMethod(): running");
         long start = System.currentTimeMillis();
 
         Object proceed = proceedingJoinPoint.proceed();
@@ -41,7 +42,7 @@ public class MetricAspect {
                     .build();
             timeLimitExceedLogRepository.save(timeLimitExceedLog);
         }
-        log.info("MetricAspect.timeRunningMethod: завершен. Время выполнения метода {} мс", executionTime);
+        log.info("timeRunningMethod(): completed. Method execution time {} ms", executionTime);
         return proceed;
     }
 }

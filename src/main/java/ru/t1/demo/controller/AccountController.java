@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.demo.aop.annotation.LogDataSourceError;
-import ru.t1.demo.aop.annotation.Metric;
-import ru.t1.demo.exception.NoEntityException;
 import ru.t1.demo.model.dto.AccountRequestDTO;
 import ru.t1.demo.model.dto.AccountResponseDTO;
 import ru.t1.demo.service.AccountService;

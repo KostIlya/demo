@@ -2,6 +2,7 @@ package ru.t1.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.t1.demo.aop.annotation.Cached;
 import ru.t1.demo.aop.annotation.Metric;
 import ru.t1.demo.util.ClientMapper;
 import ru.t1.demo.model.dto.ClientDTO;
@@ -20,6 +21,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Metric
+    @Cached
     public List<ClientDTO> getClients() {
         return clientRepository.findAll().stream()
                 .map(clientMapper::toDto)
