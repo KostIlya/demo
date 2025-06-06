@@ -6,12 +6,17 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import ru.t1.demo.config.MetricConfig;
 import ru.t1.demo.model.TimeLimitExceedLog;
+import ru.t1.demo.model.dto.TimeLimitExceedLogDTO;
 import ru.t1.demo.repository.TimeLimitExceedLogRepository;
+import ru.t1.demo.util.TimeLimitExceedLogMapper;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
@@ -19,7 +24,11 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class MetricAspect {
     @Autowired
+    private KafkaTemplate<String, TimeLimitExceedLogDTO> kafkaTemplate;
+    @Autowired
     private final TimeLimitExceedLogRepository timeLimitExceedLogRepository;
+    @Autowired
+    private final TimeLimitExceedLogMapper timeLimitExceedLogMapper;
     @Autowired
     private final MetricConfig metricConfig;
     @Around("@annotation(ru.t1.demo.aop.annotation.Metric)")
@@ -34,13 +43,25 @@ public class MetricAspect {
         long executionTime = end - start;
 
         if (executionTime > metricConfig.getTimeLimit()) {
-            TimeLimitExceedLog timeLimitExceedLog = TimeLimitExceedLog.builder()
+            TimeLimitExceedLogDTO timeLimitExceedLogDTO = TimeLimitExceedLogDTO.builder()
                     .executionTime(executionTime)
                     .limitTime(metricConfig.getTimeLimit())
                     .dateTime(LocalDateTime.now())
                     .methodSignature(proceedingJoinPoint.getSignature().toString())
                     .build();
-            timeLimitExceedLogRepository.save(timeLimitExceedLog);
+
+            CompletableFuture<SendResult<String, TimeLimitExceedLogDTO>> future = kafkaTemplate
+                    .send("t1_demo_metrics", "METRICS", timeLimitExceedLogDTO);
+
+            future.whenComplete((result, exception) -> {
+                if (exception != null) {
+                    TimeLimitExceedLog timeLimitExceedLog = timeLimitExceedLogMapper.toEntity(timeLimitExceedLogDTO);
+                    timeLimitExceedLogRepository.save(timeLimitExceedLog);
+                    log.error("Failed to send message to kafka. Saved in the database");
+                } else {
+                    log.info("Message sent successfully: {}", result.getRecordMetadata());
+                }
+            });
         }
         log.info("timeRunningMethod(): completed. Method execution time {} ms", executionTime);
         return proceed;

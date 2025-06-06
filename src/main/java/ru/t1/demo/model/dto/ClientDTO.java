@@ -1,7 +1,7 @@
 package ru.t1.demo.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +15,12 @@ import java.util.UUID;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientDTO {
-    @Column(name = "first_name", nullable = false)
+    @JsonProperty("first_name")
     private String firstName;
-    @Column(name = "middle_name", nullable = false)
+    @JsonProperty("middle_name")
     private String middleName;
-    @Column(name = "last_name", nullable = false)
+    @JsonProperty("last_name")
     private String lastName;
-    @Column(name = "client_id", nullable = false, unique = true)
+    @JsonProperty("client_id")
     private UUID clientId;
 }
